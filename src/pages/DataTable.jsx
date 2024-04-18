@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import DataList from '../components/DataList';
 
-const API_URL = 'http://localhost:8080/api/authors';
+const API_URL =
+  'https://sweet-tartufo-d6ed2b.netlify.app/.netlify/functions/api/';
 
 function DataTable() {
   const [data, setData] = useState([]);

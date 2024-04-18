@@ -3,6 +3,8 @@ import axios from 'axios';
 import style from './AddDataForm.module.css';
 
 function AddDataForm() {
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -20,8 +22,25 @@ function AddDataForm() {
     }
   }, [error, success]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await axios.post(
+        'https://sweet-tartufo-d6ed2b.netlify.app/.netlify/functions/api/',
+        {
+          name,
+          age,
+        }
+      );
+      setData(response.data);
+      setSuccess(response.data.message);
+      setError('');
+      setName('');
+      setAge('');
+    } catch (error) {
+      setError(error.response.data.message);
+      setSuccess('');
+    }
   };
 
   return (
@@ -39,9 +58,23 @@ function AddDataForm() {
         <label className={style['form-label']} htmlFor='name'>
           Name:
         </label>
-        <input type='text' id='name' name='name' />
+        <input
+          type='text'
+          id='name'
+          name='name'
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
         <label htmlFor='age'>Age:</label>
-        <input type='text' id='age' name='age' />
+        <input
+          type='text'
+          id='age'
+          name='age'
+          onChange={(e) => {
+            setAge(e.target.value);
+          }}
+        />
         <button
           type='submit'
           className={`${style.btn} ${style['btn-primary']}`}
@@ -54,21 +87,3 @@ function AddDataForm() {
 }
 
 export default AddDataForm;
-
-// const handleSubmit = async (e) => {
-//   e.preventDefault();
-//   try {
-//     const response = await axios.post('http://localhost:8080/api/authors', {
-//       name,
-//       age,
-//     });
-//     setData(response.data);
-//     setSuccess(response.data.message);
-//     setError('');
-//     setName('');
-//     setAge('');
-//   } catch (error) {
-//     setError(error.response.data.message);
-//     setSuccess('');
-//   }
-// };
